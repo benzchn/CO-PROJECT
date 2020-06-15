@@ -28,8 +28,6 @@
                 </div><br />
                 @endif
 
-                
-
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered" id="myTable" align="center">
                         <thead class="thead-dark">
@@ -78,206 +76,28 @@
                                                         @endif
                                 </td>
                                 <td>
+                                    <a href="#editRentModal{{ $list->id }}" data-toggle="modal"
+                                            class="btn btn-warning"><i class="glyphicon glyphicon-edit"></i>แก้ไข</a>
+                                        <a href="#removeRentModal{{ $list->id }}" data-toggle="modal"
+                                            class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i>ลบ</a>
 
-                                    <button type="button" class="btn btn-warning" data-id1="{{ $list->id }}"
-                                        data-equipment="{{ $list->equipment->equipment_code }}"
-                                        data-equipment_id="{{ $list->equipment->id }}"
-                                        data-user_id="{{ $list->user->id }}" data-user="{{ $list->user->name }}"
-                                        data-status="{{ $list->rent_status }}" data-date="{{ $list->rent_date }}"
-                                        data-returnfix="{{ $list->rent_return_date_fix }}"
-                                        data-etc="{{ $list->rent_etc }}" data-return="{{ $list->rent_return_date }}"
-                                        data-toggle="modal" data-target="#editRentModal">
-                                        <i class="glyphicon glyphicon-edit"></i> แก้ไข
-                                    </button>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                        data-target="#removeRentModal" data-id="{{ $list->id }}"> <i
-                                            class="glyphicon glyphicon-trash"></i> ลบ</button>
 
                                 </td>
                             </tr>
+                            <!-- edit rent brand -->
+                            <div class="modal fade" id="editRentModal{{ $list->id }}" aria-labelledby="myModalLabel" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
 
-
-                        </tbody>
-
-
-
-                </div>
-
-                <!-- Modal deleteRent -->
-                <div class='modal fade' id='removeRentModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
-                    aria-hidden='true'>
-                    <div class='modal-dialog' role='document'>
-                        <div class='modal-content'>
-                            <div class='modal-header'>
-                                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                                    <span aria-hidden='true'>&times;</span>
-                                </button>
-                                <h5 class='modal-title' id='myModalLabel'>ลบข่าว</h5>
-                            </div>
-                            <form action='{{ route('rent.destroy',$list->id) }}' method='post'>
-                                @csrf
-                                {{method_field('delete')}}
-                                <div class='modal-body'>
-                                    คุณแน่ใจที่จะลบ ?
-                                </div>
-                                <div class='modal-footer'>
-                                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>ยกเลิก</button>
-                                    <button type='submit' class='btn btn-danger'>ลบ</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal deleteRent -->
-                @endforeach
-
-                </table>
-
-            </div>
-        </div> <!-- /panel-body -->
-    </div> <!-- /panel -->
-</div> <!-- /col-md-12 -->
-</div> <!-- /row -->
-
-<!-- edit rent brand -->
-<div class="modal fade" id="" aria-labelledby="myModalLabel" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-
-            <form class="form-horizontal" action="{{ route('rent.update',$list->id) }}" method="POST">
-                @csrf
-                {{ method_field('patch') }}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><i class="fa fa-edit"></i>จัดการรายการยืม</h4>
-                </div>>
-                <div class="modal-body">
-
-                    <div id="edit-categories-messages"></div>
-
-                    <div class="modal-loading div-hide"
-                        style="width:50px; margin:auto;padding-top:50px; padding-bottom:50px;">
-                        <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-
-                    <div class="edit-categories-result">
-
-                        {{-- <input type="hidden" name="user_id" id="user_id"
-                                                    value="{{ $list->user->id }}">
-                        <input type="hidden" name="equipment_id" id="equipment_id" value="{{ $list->equipment->id }}">
-                        --}}
-
-                        <div class="form-group">
-                            <label for="equipment_code" class="col-sm-3 control-label">รหัสครุภัณฑ์</label>
-                            <label class="col-sm-1 control-label">: </label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" id="equipment_code" placeholder="รหัสครุภัณฑ์"
-                                    name="equipment_code" autocomplete="off" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="user" class="col-sm-3 control-label"> ชื่อผู้ยืม</label>
-                            <label class="col-sm-1 control-label">: </label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" id="user" placeholder="ชื่อผู้ยืม" name="user"
-                                    autocomplete="off" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="rent_status" class="col-sm-3 control-label">สถานะการยืม</label>
-                            <label class="col-sm-1 control-label">: </label>
-                            <div class="col-sm-7">
-                                <select class="form-control" id="rent_status" name="rent_status">
-                                    <option value="0">แจ้งยืม (รออนุมัติ)</option>
-                                    <option value="1">อนุมัติแล้ว</option>
-                                    <option value="2">ไม่อนุมัติ</option>
-                                    <option value="3">กำลังยืม</option>
-                                    <option value="4">ส่งคืนแล้ว</option>
-                                    <option value="5">ยกเลิกการยืม</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="rent_etc" class="col-sm-3 control-label">
-                                หมายเหตุ</label>
-                            <label class="col-sm-1 control-label">: </label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" id="rent_etc"
-                                    placeholder="รายละเอียดเพิ่มเติม.." name="rent_etc" autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="rent_date" class="col-sm-3 control-label">
-                                วันที่ยืม</label>
-                            <label class="col-sm-1 control-label">: </label>
-                            <div class="col-sm-7">
-                                <input type="date" class="form-control" id="rent_date" placeholder="วันที่ยืม"
-                                    name="rent_date" autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="rent_return_date_fix" class="col-sm-3 control-label">
-                                วันที่กำหนดคืน</label>
-                            <label class="col-sm-1 control-label">: </label>
-                            <div class="col-sm-7">
-                                <input type="date" class="form-control" id="rent_return_date_fix"
-                                    placeholder="วันที่กำหนดคืน" name="rent_return_date_fix" autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="rent_return_date" class="col-sm-3 control-label">
-                                วันที่ผู้ยืมคืน</label>
-                            <label class="col-sm-1 control-label">: </label>
-                            <div class="col-sm-7">
-                                <input type="date" class="form-control" id="rent_return_date"
-                                    placeholder="วันที่ผู้ยืมคืน" name="rent_return_date" autocomplete="off">
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- /edit brand result -->
-
-                </div> <!-- /modal-body -->
-
-                <div class="modal-footer editCategoriesFooter">
-                    <button type="button" id="clostEditModal" class="btn btn-default" data-dismiss="modal"> <i
-                            class="glyphicon glyphicon-remove-sign"></i>
-                        ปิด</button>
-
-                    <button type="submit" class="btn btn-success" id="editCategoriesBtn" data-loading-text="Loading..."
-                        autocomplete="off"> <i class="glyphicon glyphicon-ok-sign"></i> บันทึก</button>
-                </div>
-                <!-- /modal-footer -->
-            </form>
-            <!-- /.form -->
-        </div>
-        <!-- /modal-content -->
-    </div>
-    <!-- /modal-dailog -->
-</div>
-<!-- /rent brand -->
-
-<!-- edit repair -->
-                        <div class="modal fade" id="editRentModal" aria-labelledby="myModalLabel" tabindex="-1"
-                            role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-
-                                    <form class="form-horizontal" action="{{ route('repair.update',$list->id) }}"
-                                        method="POST">
-                                        @csrf
-                                        {{ method_field('patch') }}
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title"><i class="fa fa-edit"></i>แก้ไขยกเลิกรายการซ่อม</h4>
-                                        </div>
-                                        <div class="modal-body">
-
+                                        <form class="form-horizontal" action="{{ route('rent.update',$list->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            {{ method_field('patch') }}
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title"><i class="fa fa-edit"></i>จัดการรายการยืม</h4>
+                                            </div>
                                             <div class="modal-body">
 
                                                 <div id="edit-categories-messages"></div>
@@ -290,112 +110,169 @@
 
                                                 <div class="edit-categories-result">
 
+                                                    <input type="hidden" name="user_id" id="user_id"
+                                                    value="{{ $list->user->id }}">
+                                                    <input type="hidden" name="equipment_id" id="equipment_id"
+                                                        value="{{ $list->equipment->id }}">
+
+
                                                     <div class="form-group">
                                                         <label for="equipment_code"
-                                                            class="col-sm-3 control-label">รหัสครุภัณฑ์</label>
+                                                            class="col-sm-3 control-label">ครุภัณฑ์</label>
                                                         <label class="col-sm-1 control-label">: </label>
+                                                        <p><b><h4>{{ $list->equipment->equipment_code }} : {{ $list->equipment->equipment_name }}</h4></b></p>
                                                         <div class="col-sm-7">
-                                                            <input type="text" class="form-control" id="equipment_code"
+                                                            <input type="hidden" class="form-control" id="equipment_code"
                                                                 placeholder="รหัสครุภัณฑ์" name="equipment_code"
-                                                                autocomplete="off" readonly>
+                                                                autocomplete="off" readonly value="{{ $list->equipment->equipment_code }}">
                                                         </div>
                                                     </div>
 
-                                                    {{-- <div class="form-group">
-                                <label for="" class="col-sm-3 control-label">รูปครุภัณฑ์ :</label>
-                                <div class="col-sm-8">
-                                    <img src="{{ asset('images/' . $image) }}"
-                                                    style='height:150px; width:150px;'>
-                                                </div>
-                                            </div> --}}
+                                                    <div class="form-group">
+                                                        <label for="user" class="col-sm-3 control-label">
+                                                            ชื่อผู้ยืม</label>
+                                                        <label class="col-sm-1 control-label">: </label>
+                                                        <p><b><h4>{{ $list->user->name }}</h4></b></p>
+                                                        <div class="col-sm-7">
+                                                            <input type="hidden" class="form-control" id="user"
+                                                                placeholder="ชื่อผู้ยืม" name="user" autocomplete="off"
+                                                                readonly>
+                                                        </div>
+                                                    </div>
 
-                                            <div class="form-group">
-                                                <label for="user" class="col-sm-3 control-label">
-                                                    ชื่อผู้แจ้งซ่อม</label>
-                                                <label class="col-sm-1 control-label">: </label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="user"
-                                                        placeholder="ชื่อผู้แจ้งซ่อม" name="user" autocomplete="off"
-                                                        readonly>
+                                                    <div class="form-group">
+                                                        <label for="rent_status"
+                                                            class="col-sm-3 control-label">สถานะการยืม</label>
+                                                        <label class="col-sm-1 control-label">: </label>
+                                                        <div class="col-sm-7">
+                                                            <select class="form-control" id="rent_status"
+                                                                name="rent_status">
+                                                                <option value="0" {{ $list->rent_status == 0 ? 'selected' : '' }}>แจ้งยืม (รออนุมัติ)</option>
+                                                                <option value="1" {{ $list->rent_status == 1 ? 'selected' : '' }}>อนุมัติแล้ว</option>
+                                                                <option value="2" {{ $list->rent_status == 2 ? 'selected' : '' }}>ไม่อนุมัติ</option>
+                                                                <option value="3" {{ $list->rent_status == 3 ? 'selected' : '' }}>กำลังยืม</option>
+                                                                <option value="4" {{ $list->rent_status == 4 ? 'selected' : '' }}>ส่งคืนแล้ว</option>
+                                                                <option value="5" {{ $list->rent_status == 5 ? 'selected' : '' }}>ยกเลิกการยืม</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="rent_etc" class="col-sm-3 control-label">
+                                                            หมายเหตุ</label>
+                                                        <label class="col-sm-1 control-label">: </label>
+                                                        <div class="col-sm-7">
+                                                            <input type="text" class="form-control" id="rent_etc"
+                                                                placeholder="รายละเอียดเพิ่มเติม.." name="rent_etc"
+                                                                autocomplete="off" value="{{ $list->rent_etc }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="rent_date" class="col-sm-3 control-label">
+                                                            วันที่ยืม</label>
+                                                        <label class="col-sm-1 control-label">: </label>
+                                                        <div class="col-sm-7">
+                                                            <input type="date" class="form-control" id="rent_date"
+                                                                placeholder="วันที่ยืม" name="rent_date"
+                                                                autocomplete="off" value="{{ $list->rent_date }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="rent_return_date_fix"
+                                                            class="col-sm-3 control-label">
+                                                            วันที่กำหนดคืน</label>
+                                                        <label class="col-sm-1 control-label">: </label>
+                                                        <div class="col-sm-7">
+                                                            <input type="date" class="form-control"
+                                                                id="rent_return_date_fix" placeholder="วันที่กำหนดคืน"
+                                                                name="rent_return_date_fix" autocomplete="off" value="{{ $list->rent_return_date_fix }}" min="{{ $list->rent_date }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="rent_return_date" class="col-sm-3 control-label">
+                                                            วันที่ผู้ยืมคืน</label>
+                                                        <label class="col-sm-1 control-label">: </label>
+                                                        <div class="col-sm-7">
+                                                            <input type="date" class="form-control"
+                                                                id="rent_return_date" placeholder="วันที่ผู้ยืมคืน"
+                                                                name="rent_return_date" autocomplete="off" value="{{ $list->rent_return_date }}"  min="{{ $list->rent_date }}">
+                                                        </div>
+                                                    </div>
+
                                                 </div>
+                                                <!-- /edit brand result -->
+
+                                            </div> <!-- /modal-body -->
+
+                                            <div class="modal-footer editCategoriesFooter">
+                                                <button type="button" id="clostEditModal" class="btn btn-default"
+                                                    data-dismiss="modal"> <i
+                                                        class="glyphicon glyphicon-remove-sign"></i>
+                                                    ปิด</button>
+
+                                                <button type="submit" class="btn btn-success" id="editCategoriesBtn"
+                                                    data-loading-text="Loading..." autocomplete="off"> <i
+                                                        class="glyphicon glyphicon-ok-sign"></i> บันทึก</button>
                                             </div>
-
-                                            <div class="form-group">
-                                                <label for="created_at" class="col-sm-3 control-label">
-                                                    วันที่แจ้งซ่อม</label>
-                                                <label class="col-sm-1 control-label">: </label>
-                                                <div class="col-sm-7">
-                                                    <input type="datetime" class="form-control" id="created_at"
-                                                        placeholder="วันที่ยืม" name="created_at" autocomplete="off"
-                                                        readonly>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="repair_status"
-                                                    class="col-sm-3 control-label">สถานะการซ่อม</label>
-                                                <label class="col-sm-1 control-label">: </label>
-                                                <div class="col-sm-7">
-                                                    <select class="form-control" id="repair_status"
-                                                        name="repair_status">
-                                                        <option value="0">แจ้งซ่อม (รออนุมัติ)</option>
-                                                        <option value="1">รอดำเนินการ</option>
-                                                        <option value="2">รออะไหล่</option>
-                                                        <option value="3">ซ่อมสำเร็จ</option>
-                                                        <option value="4">ซ่อมไม่สำเร็จ</option>
-                                                        <option value="5">ยกเลิกการซ่อม</option>
-                                                        <option value="6">ส่งมอบเรียบร้อย</option>
-                                                        <option value="7">ส่งซ่อมศูนย์</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="repair_detail" class="col-sm-3 control-label">
-                                                    รายละเอียด</label>
-                                                <label class="col-sm-1 control-label">: </label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="repair_detail"
-                                                        placeholder="รายละเอียดเพิ่มเติม.." name="repair_detail"
-                                                        autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="repair_etc" class="col-sm-3 control-label">
-                                                    หมายเหตุ</label>
-                                                <label class="col-sm-1 control-label">: </label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="repair_etc"
-                                                        placeholder="รายละเอียดเพิ่มเติม.." name="repair_etc"
-                                                        autocomplete="off">
-                                                </div>
-                                            </div>
-
-                                            <input type="hidden" name="equipment_id" id="equipment_id">
-                                        </div>
-                                        <!-- /edit brand result -->
-
-                                </div> <!-- /modal-body -->
-
-                                <div class="modal-footer editCategoriesFooter">
-                                    <button type="button" id="clostEditModal" class="btn btn-default"
-                                        data-dismiss="modal"> <i class="glyphicon glyphicon-remove-sign"></i>
-                                        ปิด</button>
-
-                                    <button type="submit" class="btn btn-success" id="editCategoriesBtn"
-                                        data-loading-text="Loading..." autocomplete="off"> <i
-                                            class="glyphicon glyphicon-ok-sign"></i> บันทึก</button>
+                                            <!-- /modal-footer -->
+                                        </form>
+                                        <!-- /.form -->
+                                    </div>
+                                    <!-- /modal-content -->
                                 </div>
-                                <!-- /modal-footer -->
-                                </form>
-                                <!-- /.form -->
+                                <!-- /modal-dailog -->
                             </div>
-                            <!-- /modal-content -->
-                        </div>
-                        <!-- /modal-dailog -->
-@endif
+                            <!-- /rent brand -->
+
+                            <!-- Modal deleteRent -->
+                            <div class='modal fade' id='removeRentModal{{ $list->id }}' tabindex='-1' role='dialog'
+                                aria-labelledby='myModalLabel' aria-hidden='true'>
+                                <div class='modal-dialog' role='document'>
+                                    <div class='modal-content'>
+                                        <div class='modal-header'>
+                                            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                                <span aria-hidden='true'>&times;</span>
+                                            </button>
+                                            <h5 class='modal-title' id='myModalLabel'>ลบข่าว</h5>
+                                        </div>
+                                        <form action='{{ route('rent.destroy',$list->id) }}' method='post'>
+                                            @csrf
+                                            {{method_field('delete')}}
+                                            <div class='modal-body'>
+                                                คุณแน่ใจที่จะลบ ?
+                                            </div>
+                                            <div class='modal-footer'>
+                                                <button type='button' class='btn btn-secondary'
+                                                    data-dismiss='modal'>ยกเลิก</button>
+                                                <button type='submit' class='btn btn-danger'>ลบ</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal deleteRent -->
+                            @endforeach
+                            @endif
+                        </tbody>
 
 
-<script>
+
+                </div>
+
+
+
+                </table>
+
+            </div>
+        </div> <!-- /panel-body -->
+    </div> <!-- /panel -->
+</div> <!-- /col-md-12 -->
+</div> <!-- /row -->
+
+
+
+
+
+{{-- <script>
     $('#editRentModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
         var id = button.data('id')
@@ -431,6 +308,6 @@
         modal.find('.modal-body #id').val(id);
     })
 
-</script>
+</script> --}}
 
 @endsection

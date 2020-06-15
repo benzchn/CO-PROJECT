@@ -16,7 +16,7 @@ class CategoriesListController extends Controller
      */
     public function index()
     {
-        $categorieslist = CategoriesList::all();
+        $categorieslist = CategoriesList::with('categories')->all();
         return view('admin.categorieslist', compact('categorieslist'));
     }
 

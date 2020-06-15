@@ -6,6 +6,7 @@ use App\Equipment;
 use App\Rent;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RentController extends Controller
 {
@@ -16,7 +17,7 @@ class RentController extends Controller
      */
     public function index()
     {
-        $rent = Rent::orderBy('created_at','desc')->get();
+        $rent = Rent::all();
         return view('admin.rent', compact('rent'));
     }
 
@@ -42,16 +43,17 @@ class RentController extends Controller
         $request->validate([
             'user_id' => 'required',
             'equipment_id' => 'required',
-            'rent_detail' => 'required',
+            'rent_etc' => 'required'
         ]);
 
         $rent = new Rent([
             'user_id' => $request->user_id,
             'equipment_id' => $request->equipment_id,
-            'rent_detail' => $request->rent_detail
+            'rent_etc' => $request->rent_etc
         ]);
         $equipment = Equipment::find($request->equipment_id);
         $equipment->equipment_status = 2;
+        $equipment->equipment_etc = 'ผู้ยืมคือ ' . Auth::user()->name;
         $equipment->save();
 
         $rent->save();
@@ -99,19 +101,26 @@ class RentController extends Controller
             'rent_return_date_fix' => '',
             'rent_return_date' => '',
         ]);
+        if ($request->rent_status == 2 || $request->rent_status == 4 || $request->rent_status == 5) {
+            $rent = Rent::find($id)->delete();
+            $equipment = Equipment::find($request->equipment_id);
+            $equipment->equipment_status = 1;
+            $equipment->save();
+            return redirect()->back()->with('success', 'แก้ไข รายการยืม สำเร็จ!!');
+        } else {
+            $rent = Rent::find($id);
+            $rent->user_id = $request->user_id;
+            $rent->equipment_id = $request->equipment_id;
+            $rent->rent_status = $request->rent_status;
+            $rent->rent_etc = $request->rent_etc;
+            $rent->rent_date = $request->rent_date;
+            $rent->rent_return_date_fix = $request->rent_return_date_fix;
+            $rent->rent_return_date = $request->rent_return_date;
 
-        $rent = Rent::find($id);
-        $rent->user_id = $request->user_id;
-        $rent->equipment_id = $request->equipment_id;
-        $rent->rent_status = $request->rent_status;
-        $rent->rent_etc = $request->rent_etc;
-        $rent->rent_date = $request->rent_date;
-        $rent->rent_return_date_fix = $request->rent_return_date_fix;
-        $rent->rent_return_date = $request->rent_return_date;
+            $rent->save();
 
-        $rent->save();
-
-        return redirect()->back()->with('success', 'แก้ไข รายการยืม สำเร็จ!!');
+            return redirect()->back()->with('success', 'แก้ไข รายการยืม สำเร็จ!!');
+        }
     }
 
     /**
@@ -120,10 +129,13 @@ class RentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         Rent::find($id)->delete();
-
+        $equipment = Equipment::find($request->equipment);
+        $equipment->equipment_status = 1;
+        $equipment->equipment_etc = null;
+        $equipment->save();
         return redirect()->back()->with('success', 'ลบ รายการยืม สำเร็จ!!');
     }
 }

@@ -574,6 +574,24 @@
       font-weight: 600;
       font-size: 30px;
     }
+
+
+    .zoom {
+  /* padding: 10px; */
+  display:inline-block;
+  transition: transform .2s;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+.zoom:hover {
+  -ms-transform: scale(3); /* IE 9 */
+  -webkit-transform: scale(3); /* Safari 3-8 */
+  transform: scale(5); 
+}
+
+
   </style>
 </head>
 

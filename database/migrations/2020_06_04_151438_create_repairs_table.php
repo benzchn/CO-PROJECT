@@ -18,6 +18,7 @@ class CreateRepairsTable extends Migration
             $table->integer('equipment_id');
             $table->text('repair_detail');
             $table->text('repair_etc');
+            $table->text('filenames');
             $table->integer('user_id');
             $table->integer('repair_active')->default(0);
             $table->integer('repair_status')->default(0);

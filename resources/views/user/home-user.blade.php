@@ -55,38 +55,53 @@
                     <div style="padding-top: 20px;">
                         <section style='width: 1000px;margin: auto;'>
                             @if(is_null($news))
-
-                            <h2 class="text-center">** ไม่มีข่าวประชาสัมพันธ์ **</h2>
-
+                            <h2 class="text-center">** ไม่มีรายการข่าว **</h2>
                             @else
-                            {{-- {{ dd($news) }} --}}
+
                             @foreach ($news as $list)
-                            <article id='featured'>
-                                <div style="width: 264px;height: 250px;">
+                            @if($list->news_status == 1)
+                            <p><a href="#viewModal{{ $list->id }}" data-toggle="modal" class="text"> หัวข้อ : {{ $list->news_title }}
+                                    ...ประกาศเมื่อ :
+                                    {{ \Carbon\Carbon::parse($list->created_at)->format('d/m/Y') }}</a>&nbsp;<img
+                                    src='http://oxygen.readyplanet.com/images/column_1303576852/icon0002.gif'
+                                    width='25px' /></p>
 
-                                    @if (is_null($list->news_image))
 
-                                    @else
-                                    <div style='display: flex; justify-content: center; align-items: center;'>
-                                        <a href=''><img src="{{ asset('images/' . $list->news_image) }}"
-                                                style='width:100px;'></a>
-                                    </div>
-                                    @endif
-                                    <h3 style='color:black;'>{{ $list->news_title }}&nbsp;<img
-                                            src='http://oxygen.readyplanet.com/images/column_1303576852/icon0002.gif'
-                                            width='25px' /></h3>
-                                    <p>ประกาศเมื่อ : {{ \Carbon\Carbon::parse($list->created_at)->format('d/m/Y') }}
-                                    </p>
-                                    <p>โดย : {{ $list->news_create }}</p>
-                                    <a class='btn btn-outline-primary' data-title="{{ $list->news_title }}"
-                                    data-detail="{{ $list->news_detail }}" data-toggle='modal'
-                                    data-target="#NewsModal">อ่านเพิ่มเติม-></a>
-                                    {{-- <button class='btn btn-outline-primary' onclick="myFunction()">อ่านเพิ่มเติม-></button> --}}
-                                    {{-- <a href="#" id="mybtn" data-toggle='modal' data-target="#NewsModal" onclick="myFunction({{ $list->news_title }})">อ่านเพิ่มเติม-></a> --}}
+                            @endif
+                            <div class="modal fade" id="viewModal{{ $list->id }}" aria-labelledby="myModalLabel" tabindex="-1"
+                    role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+
+                                <h4 class="modal-title"><i class="fa fa-edit"></i>ข่าวประชาสัมพันธ์</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    <center><img src="{{ asset('images/news/' .  $list->news_image ) }}"
+                                            style='height:150px; width:150px;'></center>
+                                </p>
+
+                                <div class='well form-horizontal'>
+                                    <div><label  style="font-size: 16px">หัวข้อ : &nbsp;&nbsp;&nbsp; <b>{{ $list->news_title }}</b> </label></div>
+                                    <div><label  style="font-size: 16px">รายละเอียด : &nbsp;&nbsp;&nbsp; <b>{{ $list->news_detail }}</b> </label></div>
+                                    <div><label  style="font-size: 16px">ผู้ประกาศ : &nbsp;&nbsp;&nbsp; <b>{{ $list->news_create }}</b> </label></div>
+                                    <div><label  style="font-size: 16px">วันที่ประกาศ : &nbsp;&nbsp;&nbsp; <b>{{ \Carbon\Carbon::parse($list->created_at)->format('d/m/Y') }}</b> </label></div>
+
+
                                 </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="clostEditModal" class="btn btn-default" data-dismiss="modal">
+                                    <i class="glyphicon glyphicon-remove-sign"></i>
+                                    ปิด</button>
+                            </div>
+                        </div>
+                    </div>
 
-
-                            </article>
+                </div>
                             @endforeach
                             @endif
                         </section>
@@ -97,55 +112,9 @@
         </div>
     </div>
 </div>
-{{-- 
-  <div class="modal fade" id="NewsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">
-                    <i class='glyphicon glyphicon-edit'></i> ข่าวประชาสัมพันธ์</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span onclick="document.getElementById('NewsModal').style.display='none'"
-                        class="w3-button w3-blue w3-xlarge w3-display-topright">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <legend></legend>
-                <div class="form-row">
-                    <h3><label for="news_title">หัวข้อ : </label>
-                        <span for="news_title" id="news_title">{{ $list->news_title }}</span></h3>
-                </div>
-
-                <div class="form-row">
-                    <img src="{{ asset('images/' . $list->news_image) }}" style='width:250px;'>
-                </div>
-
-                <div class="form-row">
-                    <h3><label for="news_detail">รายละเอียด :</label>
-                        <span>{{ $list->news_detail }}</span></h3>
-                </div>
-                <div class="form-row">
-                    <h3><label for="create_at">ประกาศเมื่อ :</label>
-                        <span>{{ \Carbon\Carbon::parse($list->created_at)->format('d/m/Y') }} </span></h3>
-                </div>
-                <div class="form-row">
-                    <h3><label for="news_create">ประกาศเมื่อ :</label>
-                        <span>{{ $list->news_create }}</span></h3>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">ปิด</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div> --}}
-
-<script type="text/javascript">
 
 
+{{-- <script type="text/javascript">
     $('#NewsModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
         var id = button.data('id')
@@ -159,6 +128,6 @@
         modal.find('.modal-body #news_detail').val(detail);
     })
 
-</script>
+</script> --}}
 
 @endsection

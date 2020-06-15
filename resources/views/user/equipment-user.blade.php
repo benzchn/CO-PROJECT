@@ -40,12 +40,12 @@
                     <table id='myTable' class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
-                                <th id='th_css'>รหัสครุภัณฑ์</th>
-                                <th id='th_css' style='width:10%;'>รูปภาพ</th>
-                                <th id='th_css'>ลักษณะ/ยี่ห้อ</th>
-                                <th id='th_css'>ตำแหน่งที่ตั้ง</th>
-                                <th id='th_css'>สถานะ</th>
-                                <th id='th_css' style='width:15%;'>ตัวเลือก</th>
+                                <th >รหัสครุภัณฑ์</th>
+                                <th >รูปภาพ</th>
+                                <th >ลักษณะ/ยี่ห้อ</th>
+                                {{-- <th >ตำแหน่งที่ตั้ง</th> --}}
+                                <th >สถานะ</th>
+                                <th  style='width:18%;'>ตัวเลือก</th>
                             </tr>
                         </thead>
 
@@ -64,7 +64,7 @@
                                 <td><img src="{{ asset('images/equipment/' . $list->equipment_image) }}"
                                         style='height:100px; width:100px;'></td>
                                 <td>{{ $list->equipment_name }}</td>
-                                <td>{{ $list->equipment_location }}</td>
+                                {{-- <td>{{ $list->equipment_location }}</td> --}}
                                 <td>
                                     @php
                                     $status = '';
@@ -112,35 +112,58 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                      <div class="magnify5">
-                                        <div class="large5"></div>
-                                        
-                                        <div>
+                                    
+                                        <div class="container">
+                                        <div class="card card-body bg-light">
+
+                                        <div class="row">
+                                        <div class="col">
                                             <span style='color:black;font-weight:bold;'>รหัสครุภัณฑ์ : </span>
+                                        </div>
+                                        <div class="col">
                                             <span style='color:black;'>{{$list->equipment_code}}</span>
                                         </div>
+                                        </div>
                                         
-                                        <div>
+                                        
+
+                                        <div class="row">
+                                            <div class="col">
+                                            <span style='color:black;font-weight:bold;'>ลักษณะ : </span>
+                                        </div>
+                                        <div class="col">
+                                            <span style='color:black;'> {{$list->equipment_name}} </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <span style='color:black;font-weight:bold;'>ตำแหน่งที่ตั้ง : </span>
+                                        </div>
+                                        <div class="col">
+                                            <span style='color:black;'> {{ $list->equipment_location }} </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <span style='color:black;font-weight:bold;'>สถานะ : </span>
+                                        </div>
+                                        <div class="col">
+                                            <span style='color:black;'>  @php echo $status; @endphp </span>
+                                        </div>
+                                    </div>
+                                    
+                                        <div style="display: flex;
+                                        justify-content: center;
+                                        align-items: center;">
                                             <img src="{{ asset('images/equipment/' . $list->equipment_image) }}"
                                                     style='height:100px; width:100px;'>
                                         </div>
 
-                                        <div>
-                                            <span style='color:black;font-weight:bold;'>ลักษณะ : </span>
-                                            <span style='color:black;'> {{$list->equipment_name}} </span>
+                                        
                                         </div>
-
-                                        <div>
-                                            <span style='color:black;font-weight:bold;'>ตำแหน่งที่ตั้ง : </span>
-                                            <span style='color:black;'> {{ $list->equipment_location }} </span>
                                         </div>
-
-                                        <div>
-                                            <span style='color:black;font-weight:bold;'>สถานะ : </span>
-                                            <span style='color:black;'>  @php echo $status; @endphp </span>
-                                        </div>
-                                    
-                                      </div> {{--magnify5--}}
                                     </div> {{--modal-body--}}
 
                                     <div class="modal-footer">
@@ -150,7 +173,6 @@
                                 </div>
                               </div>
                         
-
                         <div class='modal fade' id='rent{{$list->id}}' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
                             aria-hidden='true'>
                             <div class='modal-dialog' role='document'>
@@ -179,8 +201,8 @@
                                             <div class="form-group">
                                                 <label for="id" style="color:black;font-size:15px;">
                                                     วัตถุประสงค์ในการยืม</label>
-                                                <input type="text" class="form-control" id="rent_detail"
-                                                    placeholder="รายละเอียดเพิ่มเติม.." name="rent_detail" autocomplete="off"
+                                                <input type="text" class="form-control" id="rent_etc"
+                                                    placeholder="รายละเอียดเพิ่มเติม.." name="rent_etc" autocomplete="off"
                                                     required>
                                             </div>
                                             <input type="hidden" id="user_id" name="user_id"
@@ -212,18 +234,5 @@
 {{-- END SHOW DURABLE ARTICLE FOR PERSONAL --}}
 
 @endif
-
-<script>
-    $('#addrent').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
-        var id = button.data('id')
-        var name = button.data('name')
-        var modal = $(this)
-        modal.find('.modal-body #equipment_id').val(id);
-        modal.find('.modal-body #name').val(name);
-    })
-
-</script>
-
 
 @endsection

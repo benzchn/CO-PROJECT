@@ -18,13 +18,13 @@
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;">
                     <div style="box-sizing: border-box;">
-                        <i class="glyphicon glyphicon-edit"></i> รายละเอียดการซ่อม</div>
+                        <i class="glyphicon glyphicon-edit"></i> กรอกรายละเอียดแจ้งซ่อม</div>
                 </div>
 
                 <div style="padding: 15px;">
 
 
-@if ($errors->any())
+                    @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
                             @foreach ($errors->all() as $error)
@@ -34,7 +34,7 @@
                     </div><br />
                     @endif
                     <form class="well form-horizontal" action="{{ route('repair.store') }}" method="post"
-                         enctype="multipart/form-data" >
+                        enctype="multipart/form-data">
                         @csrf
 
                         <!--Body-->
@@ -49,29 +49,47 @@
                                             height="21px"></div>
                                 </div>
 
+                                @if (Auth::user()->role == 'personal')
                                 <select class="form-control" title="เลือกพัสดุ" id="picker" name="equipment_id"
                                     data-live-search="true">
-                                @if(is_null($equipment))
-                                <option value="">** ไม่มีข้อมูลครุภัณฑ์ **</option>
-                                @else
-                                @foreach ($equipment as $list)
-                                <option class="form-control" value="{{ $list->id }}">{{ $list->equipment_name }}</option>
-                                @endforeach
-                                @endif
+                                    @if(is_null($equipment2))
+                                    <option value="">** ไม่มีข้อมูลครุภัณฑ์ **</option>
+                                    @else
+                                    @foreach ($equipment2 as $list)
+                                    <option class="form-control" value="{{ $list->id }}">{{ $list->equipment_name }}
+                                    </option>
+                                    @endforeach
+                                    @endif
                                 </select>
+                                @endif
+                                @if (Auth::user()->role == 'student')
+                                <select class="form-control" title="เลือกพัสดุ" id="picker" name="equipment_id"
+                                    data-live-search="true">
+                                    @if(is_null($equipment))
+                                    <option value="">** ไม่มีข้อมูลครุภัณฑ์ **</option>
+                                    @else
+                                    @foreach ($equipment as $list2)
+                                    <option class="form-control" value="{{ $list2->id }}">{{ $list2->equipment_name }}
+                                    </option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                                @endif
+
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="input-group mb-2">
-                                <label for="repair_detail" class="col-sm-2 col-form-label">รายละเอียดการซ่อม/ปัญหา</label>
+                                <label for="repair_detail"
+                                    class="col-sm-2 col-form-label">รายละเอียดการซ่อม/ปัญหา</label>
                                 <div class="input-group-prepend">
                                     <div class="input-group-text"><img
                                             src='https://image.flaticon.com/icons/svg/1102/1102457.svg' width="21px"
                                             height="21px"></div>
                                 </div>
-                                <textarea class="form-control" name="repair_detail" id="repair_detail" placeholder="กรอกรายละเอียด"
-                                    required></textarea>
+                                <textarea class="form-control" name="repair_detail" id="repair_detail"
+                                    placeholder="กรอกรายละเอียด" required></textarea>
                             </div>
                         </div>
 
@@ -109,7 +127,7 @@
                         </div>
 
                         <div class="text-center">
-                            <button type="submit"  class="btn btn-info btn-block rounded-0 py-2">บันทึก</button>
+                            <button type="submit" class="btn btn-info btn-block rounded-0 py-2">บันทึก</button>
                         </div>
                 </div>
 

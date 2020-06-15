@@ -10,7 +10,15 @@
     background-color: #fff;
     border: 1px solid transparent;
     border-radius: 4px;">
-      
+                    <!-- <div style="background-image: linear-gradient(to bottom,#f5f5f5 0,#e8e8e8 100%);background-repeat: repeat-x;    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;">
+                        <div style="box-sizing: border-box;">
+                        <i class="glyphicon glyphicon-edit"></i> รายละเอียดการซ่อม</div>
+                    </div> -->
 
                     <div style="padding: 15px;">
 
@@ -45,11 +53,11 @@
                                                 <label>---------------------------------</label>
                                             </div>
                                             <div class="form-row">
-                                                <h4>อีเมล : <span style="color:blue;">{{ Auth::user()->email }}</span></h4>
+                                                <h4>อีเมล : <span style="color:blue;"></span></h4>
                                             </div>
                                             <div class="form-row">
                                                 <h4>เบอร์โทรศัพท์ : <span
-                                                        style="color:blue;">{{ Auth::user()->phone }}</span></h4>
+                                                        style="color:blue;"></span></h4>
                                             </div>
                                         </div>
                                     </div>

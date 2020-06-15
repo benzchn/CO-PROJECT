@@ -48,7 +48,7 @@ class NewsController extends Controller
 
         $imageNews = time() . '.' . $request->news_image->extension();
 
-        $request->news_image->move(public_path('images'), $imageNews);
+        $request->news_image->move(public_path('images\news'), $imageNews);
 
         $news_image_64 = 'image_64';
         $news_status = 1;

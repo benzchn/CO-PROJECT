@@ -46,13 +46,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('equipment/{id}/{categories}', 'EquipmentController@show');
 
 
+
+
     Route::get('/admin', function () {
         return view('admin.home-admin');
     });
 
     Route::get('/user-equipment', function () {
         $equipment2 = Equipment::orderBy('created_at','desc')->get();
-        $equipment1 = Equipment::where('equipment_role', 1)->get();
+        $equipment1 = Equipment::where('equipment_role', 2)->get();
         // dd($equipment2);
         return view('user.equipment-user', compact('equipment1', 'equipment2'));
     });
@@ -61,13 +63,15 @@ Route::group(['middleware' => ['auth']], function () {
         return view('user.rent-user', compact('rent'));
     });
     Route::get('/repair-report', function () {
+        $equipment2 = Equipment::orderBy('created_at','desc')->get();
         $equipment = Equipment::where('equipment_role', 2)->get();
-        return view('user.repair', compact('equipment'));
+        return view('user.repair', compact('equipment', 'equipment2'));
     });
     Route::get('/repair-list', function () {
         $repair = Repair::where('user_id', Auth::user()->id)->get();
         return view('user.repairlist-user', compact('repair'));
     });
+
     Route::get('/profile', function () {
         return view('user.profile');
     });

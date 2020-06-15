@@ -47,18 +47,18 @@ class RepairController extends Controller
             'filenames' => '',
             'filenames.*' => 'mimes:png,jpeg'
         ]);
-
+        // dd($request->filenames);
 
 
 
         if ($request->hasfile('filenames')) {
             foreach ($request->file('filenames') as $file) {
-                $imageName = time() . '.' . $file->extension();
+                $imageName = $file->getClientOriginalName();
                 $file->move(public_path() . '/images/repair/', $imageName);
                 $data[] = $imageName;
             }
         }
-
+        // dd($data);
         $repair = new Repair([
             'equipment_id' => $request->equipment_id,
             'repair_detail' => $request->repair_detail,
@@ -129,6 +129,7 @@ class RepairController extends Controller
             $repair->repair_status = $request->repair_status;
             $repair->repair_detail = $request->repair_detail;
             $repair->repair_etc = $request->repair_etc;
+            $repair->repair_admin = Auth::user()->id;
 
             $repair->save();
             return redirect()->back()->with('success', 'แก้ไข รายการซ่อม สำเร็จ !!');
@@ -141,9 +142,12 @@ class RepairController extends Controller
      * @param  \App\Repair  $repair
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         Repair::find($id)->delete();
+        $equipment = Equipment::find($request->equipment);
+        $equipment->equipment_status = 1;
+        $equipment->save();
         return redirect()->back()->with('success', 'ยกเลิก รายการซ่อม สำเร็จ !!');
     }
 }
